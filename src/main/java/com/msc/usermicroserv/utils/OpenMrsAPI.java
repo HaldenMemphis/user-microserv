@@ -4,15 +4,12 @@ package com.msc.usermicroserv.utils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.Data;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 
 /**
@@ -40,7 +37,7 @@ public class OpenMrsAPI {
 
     private String personUrl;
 
-    private String sessionID;
+    private String sessionId;
 
 
     public OpenMrsAPI(@Value("${openmrs.api.url}") String url,
@@ -54,7 +51,7 @@ public class OpenMrsAPI {
         this.authorization = authorization;
         this.sessionUrl = sessionUrl;
         this.personUrl = personUrl;
-        this.sessionID = retrieveSessionToken();
+        this.sessionId = retrieveSessionToken();
     }
 
 
@@ -90,7 +87,7 @@ public class OpenMrsAPI {
                     .url(buildUrl(personUrl) + "?q=" + query)
                     .method("GET", null)
                     .addHeader("Authorization", "Basic " + authorization)
-                    .addHeader("Cookie", "JSESSIONID=" + sessionID)
+                    .addHeader("Cookie", "JSESSIONID=" + sessionId)
                     .build();
             Response response = client.newCall(request).execute();
             if (response.body() != null) {
@@ -113,7 +110,7 @@ public class OpenMrsAPI {
                     .url(buildUrl(personUrl+"/"+uuid))
                     .method("GET", null)
                     .addHeader("Authorization", "Basic " + authorization)
-                    .addHeader("Cookie", "JSESSIONID=" + sessionID)
+                    .addHeader("Cookie", "JSESSIONID=" + sessionId)
                     .build();
             Response response = client.newCall(request).execute();
             if (response.body() != null) {
