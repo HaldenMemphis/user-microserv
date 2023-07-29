@@ -65,6 +65,10 @@ public class RespVO<T> implements Serializable {
         return new RespVO<>(code, desc, data);
     }
 
+    public static <T> RespVO<T> createSuccessResponse() {
+        return new RespVO<>(200, "success");
+    }
+
 
 
 }
