@@ -1,18 +1,12 @@
 package com.msc.usermicroserv.controller;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.msc.usermicroserv.api.request.PatientInfoRequest;
 import com.msc.usermicroserv.service.UserInfoService;
-import com.msc.usermicroserv.service.impl.UserInfoServiceImpl;
-import com.msc.usermicroserv.utils.OpenMrsAPI;
-import com.msc.usermicroserv.utils.RespVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @program: user-microserv
@@ -35,7 +29,6 @@ public class UserInfoController {
     public JSONObject getPatientInfo(@RequestBody PatientInfoRequest request, HttpServletRequest httpRequest) {
         return userInfoService.getPatientInfoByUUID(request.getUuid());
     }
-
 
     @GetMapping("/queryPatients")
     public JSONObject queryPatients(@RequestParam("q") String query) {

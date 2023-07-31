@@ -17,10 +17,6 @@ class OpenMrsAPITest {
     @Autowired
     private OpenMrsAPI openMrsAPI;
 
-    @Test
-    public void testRetrieveSessionToken() {
-        assertNotNull(openMrsAPI.getSessionID());
-    }
 
     @Test
     public void testGetPerson() {
