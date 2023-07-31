@@ -25,7 +25,7 @@ COPY src/main/resources/application.properties /home/msc/conf/datamicroservice/a
 
 
 #对外暴露的端口号
-EXPOSE 10005
+EXPOSE 10008
 
 #CMD ["java","-jar","/app.jar","--spring.config.location=/home/fiot/conf/datamicroservice/bootstrap-dev.properties"]
 CMD nohup sh -c 'java ${JVM_OPTS} org.springframework.boot.loader.JarLauncher --spring.config.location=/home/msc/conf/datamicroservice/application.properties'
