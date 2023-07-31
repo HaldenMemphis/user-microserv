@@ -1,9 +1,6 @@
 package com.msc.usermicroserv.service;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.msc.usermicroserv.utils.RespVO;
-
-import java.util.List;
 
 /**
  * @program: user-microserv
@@ -13,9 +10,9 @@ import java.util.List;
  **/
 public interface UserInfoService {
 
-    public JSONObject getAllPatients();
+    JSONObject getAllPatients();
 
-    public JSONObject getPatientInfoByUUID(String uuid);
+    JSONObject getPatientInfoByUUID(String uuid);
 
-    public JSONObject queryPatients(String query);
+    JSONObject queryPatients(String query);
 }

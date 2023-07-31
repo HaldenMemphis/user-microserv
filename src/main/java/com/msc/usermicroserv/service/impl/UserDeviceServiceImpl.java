@@ -1,11 +1,16 @@
 package com.msc.usermicroserv.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.msc.usermicroserv.api.request.BindDeviceRequest;
+import com.msc.usermicroserv.dao.entity.DeviceBindEntity;
+import com.msc.usermicroserv.dao.entity.DeviceInfoEntity;
 import com.msc.usermicroserv.dao.mapper.DeviceBindMapper;
 import com.msc.usermicroserv.service.UserDeviceService;
 import com.msc.usermicroserv.utils.RespVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,18 +32,66 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     private DeviceBindMapper deviceBindMapper;
 
     @Override
-    public RespVO bindDevice(String uuid, String mac) {
-        if (!isValidMacAddress(mac) || !isValidUuid(uuid)) {
+//    @Transactional
+    public RespVO bindDevice(BindDeviceRequest request) {
+        if (!isValidMacAddress(request.getMac()) || !isValidUuid(request.getUuid())) {
             return new RespVO(500, "Invalid mac or uuid", null);
         }
         try {
-            if (deviceBindMapper.bindDevice(uuid, mac) == 1) {
+            if (deviceBindMapper.bindDevice(request) == 1) {
                 return RespVO.createSuccessResponse();
             } else {
                 return new RespVO(500, "Bind failed", null);
             }
         } catch (Exception e) {
             return new RespVO(500, "error", e.getMessage());
+        }
+    }
+
+    @Override
+    public JSONObject getDeviceByPatientUUID(String uuid) {
+        JSONObject output = new JSONObject();
+        try {
+            List<DeviceBindEntity> results = deviceBindMapper.getDeviceByPatientUUID(uuid);
+            output.put("total", results.size());
+            output.put("records", results);
+            return output;
+        }catch(Exception e){
+            output.put("code:",500);
+            output.put("desc:",e.getMessage());
+            return output;
+        }
+    }
+
+    @Override
+    public RespVO unbindDevice(String uuid, String mac) {
+        if (!isValidMacAddress(mac) || !isValidUuid(uuid)) {
+            return new RespVO(500, "Invalid mac or uuid", null);
+        }
+        try{
+            if(deviceBindMapper.unbindDevice(uuid, mac) == 1) {
+                return RespVO.createSuccessResponse();
+            }else {
+                return new RespVO(500, "Unbind failed", null);
+            }
+        }catch (Exception e) {
+            return new RespVO(500, "error", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public JSONObject getUnbindDevices() {
+        JSONObject output = new JSONObject();
+        try{
+            List<DeviceInfoEntity> results = deviceBindMapper.getUnbindDevices();
+            output.put("total", results.size());
+            output.put("records", results);
+            return output;
+        }catch (Exception e) {
+            output.put("code:",500);
+            output.put("desc:",e.getMessage());
+            return output;
         }
     }
 
@@ -55,13 +108,10 @@ public class UserDeviceServiceImpl implements UserDeviceService {
 
 
     public static boolean isValidUuid(String input) {
-        // 创建 Pattern 对象
         Pattern pattern = Pattern.compile(UUID_REGEX);
 
-        // 创建 Matcher 对象
         Matcher matcher = pattern.matcher(input);
 
-        // 检查是否匹配
         return matcher.matches();
     }
 }

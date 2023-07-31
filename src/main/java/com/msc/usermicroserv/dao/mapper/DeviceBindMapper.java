@@ -1,6 +1,11 @@
 package com.msc.usermicroserv.dao.mapper;
 
+import com.msc.usermicroserv.api.request.BindDeviceRequest;
+import com.msc.usermicroserv.dao.entity.DeviceBindEntity;
+import com.msc.usermicroserv.dao.entity.DeviceInfoEntity;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @program: user-microserv
@@ -11,6 +16,14 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DeviceBindMapper {
 
-    int bindDevice(String uuid, String mac);
+    int bindDevice(BindDeviceRequest request);
 
+    List<DeviceBindEntity> getDeviceByPatientUUID(String uuid);
+
+    int unbindDevice(String uuid, String mac);
+
+//    List<DeviceInfoEntity> queryDeviceInfo(String mac);
+
+//    int updateDeviceBindStatus(BindDeviceRequest request);
+    List<DeviceInfoEntity> getUnbindDevices();
 }

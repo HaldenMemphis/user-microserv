@@ -4,19 +4,16 @@ import lombok.Data;
 
 /**
  * @program: user-microserv
- * @description: This part is the entity of table 'device bind'
+ * @description:
  * @author: yfliu
- * @create: 2023-07-27 16:29
+ * @create: 2023-07-30 21:25
  **/
 @Data
-public class DeviceBindEntity {
-    private Integer bindId;
+public class DeviceInfoEntity {
 
-    private Integer infoId;
+    private Integer deviceId;
 
     private String mac;
-
-    private String patientUUID;
 
     private String deviceType;
 

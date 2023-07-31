@@ -3,10 +3,61 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.msc.usermicroserv.dao.mapper.DeviceBindMapper">
 
+    <resultMap id="DeviceBindInfoMap" type="com.msc.usermicroserv.dao.entity.DeviceBindEntity">
+        <result column="bind_id" property="bindId" jdbcType="INTEGER"/>
+        <result column="info_id" property="infoId" jdbcType="INTEGER"/>
+        <result column="mac" property="mac" jdbcType="VARCHAR"/>
+        <result column="patient_uuid" property="patientUUID" jdbcType="VARCHAR"/>
+        <result column="device_type" property="deviceType" jdbcType="VARCHAR"/>
+        <result column="display_name" property="displayName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="UnBindDeviceInfoMap" type="com.msc.usermicroserv.dao.entity.DeviceInfoEntity">
+        <result column="id" property="deviceId" jdbcType="INTEGER"/>
+        <result column="mac" property="mac" jdbcType="VARCHAR"/>
+        <result column="display_name" property="displayName" jdbcType="VARCHAR"/>
+        <result column="device_type" property="deviceType" jdbcType="VARCHAR"/>
+    </resultMap>
+
     <insert id="bindDevice" parameterType="com.msc.usermicroserv.api.request.BindDeviceRequest">
         INSERT INTO device.device_bind (id, mac, patient_uuid)
         VALUES (DEFAULT, #{mac}, #{uuid})
     </insert>
+
+<!--    <update id="updateDeviceBindStatus" parameterType="com.msc.usermicroserv.api.request.BindDeviceRequest">-->
+<!--        UPDATE device.device_info-->
+<!--        SET status = true-->
+<!--        WHERE mac = #{mac}-->
+<!--    </update>-->
+
+    <select id="getDeviceByPatientUUID" parameterType="com.msc.usermicroserv.api.request.GetDeviceRequest" resultMap="DeviceBindInfoMap">
+        SELECT device.device_bind.id           as bind_id,
+               device.device_info.id           as info_id,
+               device.device_bind.mac          as mac,
+               device.device_bind.patient_uuid as patient_uuid,
+               device.device_info.device_type  as device_type,
+               device.device_info.display_name as display_name
+        FROM device.device_bind
+                 LEFT JOIN device.device_info ON device.device_bind.mac = device.device_info.mac
+        WHERE patient_uuid = #{uuid}
+    </select>
+
+    <delete id="unbindDevice" parameterType="com.msc.usermicroserv.api.request.BindDeviceRequest">
+        DELETE FROM device.device_bind
+        WHERE mac = #{mac}
+          AND patient_uuid = #{uuid}
+    </delete>
+
+    <select id="getUnbindDevices" resultMap="UnBindDeviceInfoMap">
+        SELECT device.device_info.id           as id,
+               device.device_info.mac          as mac,
+               device.device_info.display_name as display_name,
+               device.device_info.device_type  as device_type
+        FROM device.device_info
+        WHERE device.device_info.mac NOT IN (SELECT device.device_bind.mac
+                                             FROM device.device_bind)
+    </select>
+
 
 
 </mapper>

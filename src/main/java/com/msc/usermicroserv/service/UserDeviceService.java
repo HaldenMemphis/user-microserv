@@ -1,5 +1,7 @@
 package com.msc.usermicroserv.service;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.msc.usermicroserv.api.request.BindDeviceRequest;
 import com.msc.usermicroserv.utils.RespVO;
 
 /**
@@ -10,5 +12,12 @@ import com.msc.usermicroserv.utils.RespVO;
  **/
 public interface UserDeviceService {
 
-    RespVO bindDevice(String uuid, String mac);
+    RespVO bindDevice(BindDeviceRequest request);
+
+    JSONObject getDeviceByPatientUUID(String uuid);
+
+    RespVO unbindDevice(String uuid, String mac);
+
+
+    JSONObject getUnbindDevices();
 }
