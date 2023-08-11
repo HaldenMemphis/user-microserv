@@ -5,6 +5,7 @@ import com.msc.usermicroserv.api.request.BindDeviceRequest;
 import com.msc.usermicroserv.api.request.GetDeviceRequest;
 import com.msc.usermicroserv.service.UserDeviceService;
 import com.msc.usermicroserv.utils.RespVO;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: yfliu
  * @create: 2023-07-27 16:21
  **/
+@Log4j2
 @RestController
 public class UserDeviceController {
     @Autowired

@@ -2,11 +2,13 @@ package com.msc.usermicroserv.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.msc.usermicroserv.api.request.BindDeviceRequest;
+import com.msc.usermicroserv.api.request.UpdateDeviceStatusRequest;
 import com.msc.usermicroserv.dao.entity.DeviceBindEntity;
 import com.msc.usermicroserv.dao.entity.DeviceInfoEntity;
 import com.msc.usermicroserv.dao.mapper.DeviceBindMapper;
 import com.msc.usermicroserv.service.UserDeviceService;
 import com.msc.usermicroserv.utils.RespVO;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ import java.util.regex.Pattern;
  * @author: yfliu
  * @create: 2023-07-29 18:29
  **/
+@Log4j2
 @Service
 public class UserDeviceServiceImpl implements UserDeviceService {
 
@@ -37,8 +40,9 @@ public class UserDeviceServiceImpl implements UserDeviceService {
         if (!isValidMacAddress(request.getMac()) || !isValidUuid(request.getUuid())) {
             return new RespVO(500, "Invalid mac or uuid", null);
         }
+        UpdateDeviceStatusRequest updateDeviceStatusRequest = new UpdateDeviceStatusRequest(request.getMac(), true);
         try {
-            if (deviceBindMapper.bindDevice(request) == 1) {
+            if (deviceBindMapper.bindDevice(request) == 1 && deviceBindMapper.updateDeviceBindStatus(updateDeviceStatusRequest) == 1) {
                 return RespVO.createSuccessResponse();
             } else {
                 return new RespVO(500, "Bind failed", null);
@@ -56,9 +60,9 @@ public class UserDeviceServiceImpl implements UserDeviceService {
             output.put("total", results.size());
             output.put("records", results);
             return output;
-        }catch(Exception e){
-            output.put("code:",500);
-            output.put("desc:",e.getMessage());
+        } catch (Exception e) {
+            output.put("code:", 500);
+            output.put("desc:", e.getMessage());
             return output;
         }
     }
@@ -68,13 +72,14 @@ public class UserDeviceServiceImpl implements UserDeviceService {
         if (!isValidMacAddress(mac) || !isValidUuid(uuid)) {
             return new RespVO(500, "Invalid mac or uuid", null);
         }
-        try{
-            if(deviceBindMapper.unbindDevice(uuid, mac) == 1) {
+        UpdateDeviceStatusRequest updateDeviceStatusRequest = new UpdateDeviceStatusRequest(mac, false);
+        try {
+            if (deviceBindMapper.unbindDevice(uuid, mac) == 1 && deviceBindMapper.updateDeviceBindStatus(updateDeviceStatusRequest) == 1) {
                 return RespVO.createSuccessResponse();
-            }else {
+            } else {
                 return new RespVO(500, "Unbind failed", null);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             return new RespVO(500, "error", e.getMessage());
         }
 
@@ -83,14 +88,14 @@ public class UserDeviceServiceImpl implements UserDeviceService {
     @Override
     public JSONObject getUnbindDevices() {
         JSONObject output = new JSONObject();
-        try{
+        try {
             List<DeviceInfoEntity> results = deviceBindMapper.getUnbindDevices();
             output.put("total", results.size());
             output.put("records", results);
             return output;
-        }catch (Exception e) {
-            output.put("code:",500);
-            output.put("desc:",e.getMessage());
+        } catch (Exception e) {
+            output.put("code:", 500);
+            output.put("desc:", e.getMessage());
             return output;
         }
     }

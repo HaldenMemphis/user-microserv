@@ -51,7 +51,6 @@ public class OpenMrsAPI {
         this.authorization = authorization;
         this.sessionUrl = sessionUrl;
         this.personUrl = personUrl;
-        this.sessionId = retrieveSessionToken();
     }
 
 
@@ -81,14 +80,12 @@ public class OpenMrsAPI {
 
     public JSONObject queryPatients(String query) {
         try {
-            this.sessionId = retrieveSessionToken();
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             Request request = new Request.Builder()
                     .url(buildUrl(personUrl) + "?q=" + query)
                     .method("GET", null)
                     .addHeader("Authorization", "Basic " + authorization)
-                    .addHeader("Cookie", "JSESSIONID=" + sessionId)
                     .build();
             Response response = client.newCall(request).execute();
             if (response.body() != null) {
@@ -105,14 +102,14 @@ public class OpenMrsAPI {
 
     public JSONObject getPatientInfoByUUID(String uuid) {
         try {
-            this.sessionId = retrieveSessionToken();
+//            this.sessionId = retrieveSessionToken();
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             Request request = new Request.Builder()
                     .url(buildUrl(personUrl + "/" + uuid))
                     .method("GET", null)
                     .addHeader("Authorization", "Basic " + authorization)
-                    .addHeader("Cookie", "JSESSIONID=" + sessionId)
+//                    .addHeader("Cookie", "JSESSIONID=" + sessionId)
                     .build();
             Response response = client.newCall(request).execute();
             if (response.body() != null) {

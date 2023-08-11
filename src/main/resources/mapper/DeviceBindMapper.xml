@@ -24,11 +24,6 @@
         VALUES (DEFAULT, #{mac}, #{uuid})
     </insert>
 
-<!--    <update id="updateDeviceBindStatus" parameterType="com.msc.usermicroserv.api.request.BindDeviceRequest">-->
-<!--        UPDATE device.device_info-->
-<!--        SET status = true-->
-<!--        WHERE mac = #{mac}-->
-<!--    </update>-->
 
     <select id="getDeviceByPatientUUID" parameterType="com.msc.usermicroserv.api.request.GetDeviceRequest" resultMap="DeviceBindInfoMap">
         SELECT device.device_bind.id           as bind_id,
@@ -47,6 +42,12 @@
         WHERE mac = #{mac}
           AND patient_uuid = #{uuid}
     </delete>
+
+    <update id="updateDeviceBindStatus" parameterType="com.msc.usermicroserv.api.request.UpdateDeviceStatusRequest">
+        UPDATE device.device_info
+        SET bind_status = #{status}
+        WHERE mac = #{mac}
+    </update>
 
     <select id="getUnbindDevices" resultMap="UnBindDeviceInfoMap">
         SELECT device.device_info.id           as id,

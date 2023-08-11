@@ -1,6 +1,7 @@
 package com.msc.usermicroserv.dao.mapper;
 
 import com.msc.usermicroserv.api.request.BindDeviceRequest;
+import com.msc.usermicroserv.api.request.UpdateDeviceStatusRequest;
 import com.msc.usermicroserv.dao.entity.DeviceBindEntity;
 import com.msc.usermicroserv.dao.entity.DeviceInfoEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,6 +25,7 @@ public interface DeviceBindMapper {
 
 //    List<DeviceInfoEntity> queryDeviceInfo(String mac);
 
-//    int updateDeviceBindStatus(BindDeviceRequest request);
+    int updateDeviceBindStatus(UpdateDeviceStatusRequest request);
+
     List<DeviceInfoEntity> getUnbindDevices();
 }
